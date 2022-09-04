@@ -125,4 +125,56 @@ public class UserAction {
         }
     }
 
+    public void addBrands(){
+        try{
+            System.out.println("---- Enter Brand Name ----");
+            String bname = sc.nextLine();
+            PreparedStatement psmt = conn.prepareStatement("insert into tblbrands(brandname) value(?)");
+            psmt.setString(1,bname);
+            if(!psmt.execute()){
+                System.out.println("\n---- SUCCESS: Brand "+bname+"-- Added ----");
+            }else{
+                System.out.println("---- ERROR: Brand Not Added ------------");
+            }
+        }catch(SQLException ex){
+            System.out.println("---- ERROR: "+ex.getMessage()+"------");
+        }
+    }
+
+    public void listBrands(){
+        try{
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery("select id,brandname from tblbrands");
+            System.out.print("\n--------Brand List -----------\n");
+            while(rs.next()){
+                System.out.println(rs.getInt(1)+") - "+rs.getString(2));
+            }
+            System.out.print("\n");
+
+            System.out.println("Y: To Remove Brand N: Continue ");
+            if(sc.next().equals("Y")){
+                removeBrand();
+            }
+        }catch(SQLException ex){
+            System.out.println("---- ERROR: "+ex.getMessage()+"------");
+        }
+    }
+
+    private void removeBrand(){
+        System.out.println("-----INPUT: Enter Id of Brand to remove -----");
+        int id = sc.nextInt();
+        try{
+            Statement stmt = conn.createStatement();
+            boolean result = stmt.execute("delete from tblbrands where id="+id);
+            if(!result){
+                System.out.println("---- SUCCESS: Brand Removed ------------");
+            }else{
+                System.out.println("---- ERROR: Brand Removed ------------");
+            }
+        }catch(SQLException ex){
+            System.out.println("---- ERROR: "+ex.getMessage()+"------------");
+        }
+
+    }
+
 }

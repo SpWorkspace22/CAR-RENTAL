@@ -1,4 +1,7 @@
 // Java Librariry
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.sql.*;
 import java.util.*;
 
@@ -9,7 +12,7 @@ import userutility.UserAction;
 class CarRental{
     private static Connection conn=null;
     private static UserAction user=null;
-    public static void main(String[] args){
+    public static void main(String[] args) throws IOException{
         System.out.println("~~~~~~~~~~~~~~~~~ Welcome To Car Rental Services ~~~~~~~~~~~~~~~~~~~~");
         conn = ConnectDatabase.getConnection();
         if(conn!=null){
@@ -24,7 +27,7 @@ class CarRental{
         }
     }
 
-    private static void loginToSystem(){
+    private static void loginToSystem() throws IOException{
         Scanner sc = new Scanner(System.in);
         user = new UserAction(conn);
         
@@ -45,7 +48,7 @@ class CarRental{
                         break;
                 case "Admin_Log_In":
                         if(user.isAdminAuthorize()){
-                            adminActions();
+                            adminActions(user);
                         }
                         else{
                             System.out.println("--- User Does Not Exist plase Recheck ---");
@@ -78,17 +81,18 @@ class CarRental{
         }
     }
 
-    private static void adminActions(){
-        Scanner sc =  new Scanner(System.in);
+    private static void adminActions(UserAction user) throws IOException{
+        BufferedReader rd = new BufferedReader(new InputStreamReader(System.in));
         while(true){
             System.out.println("1. Add_Brand\t2. List_Brands\t3.Add_Vehicle\t4.Show_Vehicle_List\t5. Booking_Details\t6.Log_Out");
-            String opeartion = sc.next();
-            
+            String opeartion = rd.readLine();
             switch(opeartion){
                 case "Add_Brand":
-                                break;
+                        user.addBrands();
+                        break;
                 case "List_Brands":
-                                break;
+                        user.listBrands();
+                        break;
                 case "Add_Vehicle":
                                 break;
                 case "Show_Vehicle_List":
